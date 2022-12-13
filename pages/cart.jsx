@@ -1,7 +1,11 @@
 import styles from "../styles/Cart.module.css"
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cart = () => {
+
+    const dispatch = useDispatch()
+    const cart = useSelector((state)=>state.cart)
   return (
     <div className={styles.container}>
         <div className={styles.left}>
@@ -14,11 +18,14 @@ const Cart = () => {
                     <th>Cantidad</th>
                     <th>Total</th>
                 </tr>
-                <tr className={styles.tr}>
+                {cart.products.map(product=>(
+
+                
+                <tr className={styles.tr} key={product._id}>
                     <td>
                         <div className={styles.imgContainer}>
                             <Image 
-                                src="/img/pizza.png"
+                                src={product.img}
                                 layout="fill"
                                 objectFit="cover"
                                 alt=""
@@ -26,36 +33,41 @@ const Cart = () => {
                         </div>
                     </td>
                     <td>
-                        <span className={styles.name}>CORALZO</span>
+                        <span className={styles.name}>{product.title}</span>
                     </td>
                     <td>
                         <span className={styles.extras}>
-                            Doble ingrediente, salsa picante
+                            {product.extras.map(extra=>(
+                                <span key={extra._id}>{extra.text}, </span>
+                            ))}
                         </span>
                     </td>
                     <td>
-                        <span className={styles.price}>$19.90</span>
+                        <span className={styles.price}>${product.price}</span>
                     </td>
                     <td>
-                        <span className={styles.quantity}>2</span>
+                        <span className={styles.quantity}>{product.quantity}</span>
                     </td>
                     <td>
-                        <span className={styles.total}>$39.90</span>
+                        <span className={styles.total}>
+                            ${product.price * product.quantity}
+                        </span>
                     </td>
                 </tr>
+                ))}
             </table>
         </div>
         <div className={styles.right}>
             <div className={styles.wrapper}>
                 <h2 className={styles.title}>TOTAL CARRITO</h2>
                 <div className={styles.totalText}>
-                    <b className={styles.totalTextTitle}>Subtotal:</b>$79.90
+                    <b className={styles.totalTextTitle}>Subtotal:</b>${cart.total}
                 </div>
                 <div className={styles.totalText}>
                     <b className={styles.totalTextTitle}>Descuento:</b>$9.90
                 </div>
                 <div className={styles.totalText}>
-                    <b className={styles.totalTextTitle}>Total:</b>$70.00
+                    <b className={styles.totalTextTitle}>Total:</b>${cart.total}
                 </div>
                 <button className={styles.button}>COMPRAR AHORA</button>
             </div>
