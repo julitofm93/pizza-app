@@ -10,11 +10,13 @@ import {
 } from "@paypal/react-paypal-js";
 import { useRouter } from "next/router";
 import { reset } from "../redux/cartSlice";
+import OrderDetail from "../components/OrderDetail";
 
 
 const Cart = () => { 
     const cart = useSelector((state)=>state.cart)
     const [open, setOpen] = useState(false)
+    const [cash, setCash] = useState(false)
     const amount = cart.total;
     // This values are the props in the UI
     const currency = "USD";
@@ -157,7 +159,12 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
                 </div>
                 {open ? (
                 <div className={styles.paymentMethods}>
-                    <button className={styles.payButton}>CASH ON DELIVERY</button>
+                    <button 
+                    className={styles.payButton} 
+                    onClick={()=>setCash(true)}
+                    >
+                        CASH ON DELIVERY
+                    </button>
                 <PayPalScriptProvider
                 options={{
                     "client-id": "ATxx6JiD-MVVnetMft_qjXblLzdgHuCVsPul1ejmthFQIZMFHjDADqHT_Vy9uSaC4fTppALCVwCrcHQj",
@@ -173,11 +180,13 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
 			    </PayPalScriptProvider>
                 </div>
                 ) : (
-
-                    <button onClick={()=>setOpen(true)} className={styles.button}>COMPRAR AHORA</button>
+                    <button onClick={()=>setOpen(true)} className={styles.button}>
+                        COMPRAR AHORA
+                    </button>
                 )}
             </div>
         </div>
+        {cash && <OrderDetail total={cart.total} createOrder={createOrder}/>}
     </div>
   )
 }
